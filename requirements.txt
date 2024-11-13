@@ -5,3 +5,5 @@ matplotlib
 joblib
 seaborn
 tensorflow
+imblearn
+statsmodels
