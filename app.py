@@ -42,6 +42,7 @@ class DataManager:
     def process_firebase_data(self, firebase_data):
         """Process raw Firebase data into a DataFrame"""
         try:
+            # current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M")
             current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
             new_data = {
@@ -120,9 +121,11 @@ class RainPredictionApp:
             df.drop(columns=['Rain'], inplace=True)
 
             # Process datetime
-            df['DateTime'] = pd.to_datetime(df['DateTime'], format='%d-%m-%Y %H:%M', dayfirst=True)
-            df['DateTime'] = df['DateTime'].dt.strftime('%Y-%m-%d %H:%M:%S')
-            df['DateTime'] = pd.to_datetime(df['DateTime'], format='%Y-%m-%d %H:%M:%S')
+            # df['DateTime'] = pd.to_datetime(df['DateTime'], format='%d-%m-%Y %H:%M', dayfirst=True)
+            # df['DateTime'] = df['DateTime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+            # df['DateTime'] = pd.to_datetime(df['DateTime'], format='%Y-%m-%d %H:%M:%S')
+            
+            df['DateTime'] = pd.to_datetime(df['DateTime'])
             df.index = df['DateTime']
             df.drop(columns=['DateTime'], inplace=True)
 
