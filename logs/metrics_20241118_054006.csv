@@ -1,0 +1,2 @@
+timestamp,data_shape,min_rain,max_rain,mean_rain,std_rain,prediction_min,prediction_max,prediction_mean
+20x4,3600.0000,4095.0000,3784.7500,196.0180,0,0,0
