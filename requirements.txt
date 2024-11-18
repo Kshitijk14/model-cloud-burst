@@ -8,3 +8,10 @@ tensorflow
 imblearn
 statsmodels
 ipynb-py-convert
+dvc
+notebook
+types-PyYAML
+pyYAML
+scipy
+Flask
+Flask-Cors
