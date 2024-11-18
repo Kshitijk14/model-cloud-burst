@@ -1,0 +1,124 @@
+{
+    "data": [
+      {
+        "DateTime": "10-11-2024 00:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 4095
+      },
+      {
+        "DateTime": "10-11-2024 01:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3671
+      },
+      {
+        "DateTime": "10-11-2024 02:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3671
+      },
+      {
+        "DateTime": "10-11-2024 03:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3671
+      },
+      {
+        "DateTime": "10-11-2024 04:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3803
+      },
+      {
+        "DateTime": "10-11-2024 05:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3803
+      },
+      {
+        "DateTime": "10-11-2024 06:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3803
+      },
+      {
+        "DateTime": "10-11-2024 07:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3803
+      },
+      {
+        "DateTime": "10-11-2024 08:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3600
+      },
+      {
+        "DateTime": "10-11-2024 09:00",
+        "Humidity": 73,
+        "Temperature": 26.1,
+        "Rain": 3600
+      },
+      {
+        "DateTime": "10-11-2024 10:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 3639
+      },
+      {
+        "DateTime": "10-11-2024 11:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 3639
+      },
+      {
+        "DateTime": "10-11-2024 12:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 3639
+      },
+      {
+        "DateTime": "10-11-2024 13:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 3639
+      },
+      {
+        "DateTime": "10-11-2024 14:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 3639
+      },
+      {
+        "DateTime": "10-11-2024 15:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 4095
+      },
+      {
+        "DateTime": "10-11-2024 16:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 4095
+      },
+      {
+        "DateTime": "10-11-2024 17:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 4095
+      },
+      {
+        "DateTime": "10-11-2024 18:00",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 4095
+      },
+      {
+        "DateTime": "17-11-2024 19:48",
+        "Humidity": 73,
+        "Temperature": 26.2,
+        "Rain": 3600
+      }
+    ]
+  }
