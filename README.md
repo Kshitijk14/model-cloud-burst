@@ -7,7 +7,7 @@ The Cloud Burst Prediction & Forecasting System is an advanced, AI-powered solut
 ## 🚀 Key Features
 
 - **Multi-Source Data Integration**
-  - Historical data from Open-Mateo API : https://open-meteo.com/en/docs/historical-weather-api
+  - Historical data from [Open-Mateo API](https://open-meteo.com/en/docs/historical-weather-api)
   - Real-time sensor data from ESP32 and DHT-11
   - Time-series feature engineering
 
@@ -83,7 +83,7 @@ The Cloud Burst Prediction & Forecasting System is an advanced, AI-powered solut
 ### Setup Steps
 1. Clone the repository
 ```bash
-[git clone https://github.com/Kshitijk14/cloud-burst.git](https://github.com/Kshitijk14/model-cloud-burst.git)
+git clone https://github.com/Kshitijk14/cloud-burst.git
 cd model-cloud-burst
 ```
 
