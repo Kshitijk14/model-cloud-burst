@@ -15,3 +15,5 @@ pyYAML
 scipy
 Flask
 Flask-Cors
+torch
+pytorch-forecasting
