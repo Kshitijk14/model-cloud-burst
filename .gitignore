@@ -163,4 +163,7 @@ cython_debug/
 cloud/
 
 # artifacts
-artifacts/
+# artifacts/dataset/
+artifacts/models/
+artifacts/results/
+artifacts/scalers/
