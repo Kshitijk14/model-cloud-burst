@@ -161,3 +161,9 @@ cython_debug/
 
 # custom virtual environment
 cloud/
+
+# artifacts
+# artifacts/dataset/
+artifacts/models/
+artifacts/results/
+artifacts/scalers/
