@@ -25,6 +25,7 @@ list_of_files = [
     "utils/helpers/__init__.py",
     
     "main.py",
+    "app.py",
     
     "params.yaml",
     "DVC.yaml",
