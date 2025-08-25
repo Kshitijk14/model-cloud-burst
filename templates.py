@@ -9,9 +9,9 @@ project_name = "time_series_forecasting"
 
 list_of_files = [
     "time_series_pipeline/__init__.py",
-    "time_series_pipeline/stage_01_setup.py",
-    "time_series_pipeline/stage_02_preprocessing.py",
-    "time_series_pipeline/stage_03_signal_decomposition.py",
+    "time_series_pipeline/stage_00_setup.py",
+    "time_series_pipeline/stage_01_preprocessing.py",
+    "time_series_pipeline/stage_02_signal_decomposition.py",
     "time_series_pipeline/stage_03a_imf_mode.py",
     "time_series_pipeline/stage_03b_fcr_mode.py",
     "time_series_pipeline/stage_04_postprocessing_per_channel.py",

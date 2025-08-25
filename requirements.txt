@@ -15,3 +15,4 @@ pyYAML
 scipy
 Flask
 Flask-Cors
+EMD-signal
