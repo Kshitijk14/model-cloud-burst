@@ -114,8 +114,9 @@ for name, preds in ctx["preds_fcr"].items():
 
 print("\nStage_06 Reconstructions:")
 for model_type, recon in ctx["reconstructions"].items():
-    for kind, arr in recon.items():
-        print(f" - {model_type} {kind}: {arr.shape}")
+    for kind, split_dict in recon.items():
+        for split_name, arr in split_dict.items():
+            print(f" - {model_type} {kind} {split_name}: {arr.shape}")
 
 
 print("\nArtifacts saved under:", run_dir)

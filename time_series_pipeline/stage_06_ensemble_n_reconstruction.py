@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from typing import Dict, Any
 
 from utils.helpers.pipeline import Step
+from utils.helpers.reconst import get_indices_for_split
 
 
 class Stage06_EnsembleReconstruction(Step):
@@ -70,15 +71,13 @@ class Stage06_EnsembleReconstruction(Step):
         def plot_vs_actual(kind: str, split: str, zoom: bool = False):
             # actual_idx = splits[split]
             # idx = np.array(actual_idx)[-len(recons["LSTM"][kind][split]):]
-            
             # dates = df[time_col].iloc[idx].values
             # y_true = df[context["cfg_data"].target_col].iloc[idx].values
             
             pred_lstm = recons["LSTM"][kind][split][:, -1]
             pred_gru  = recons["GRU"][kind][split][:, -1]
             
-            start, end = splits[split]
-            actual_idx = range(end - len(pred_lstm), end)  # last len(pred_lstm) indices
+            actual_idx = get_indices_for_split(splits, split, length=len(pred_lstm))
             dates = df[time_col].iloc[actual_idx].values
             y_true = df[context["cfg_data"].target_col].iloc[actual_idx].values
 
@@ -121,26 +120,29 @@ class Stage06_EnsembleReconstruction(Step):
         
         # ---- Plots: LSTM vs GRU for IMF, FCR, Meta ----
         for split_to_plot in ["val", "test"]:
-            actual_idx = splits[split_to_plot]
+            # actual_idx = splits[split_to_plot]
+            # dates = df[context["cfg_data"].time_col].iloc[actual_idx].values
+            
+            actual_idx = get_indices_for_split(splits, split_to_plot, length=len(recons["LSTM"]["imf"][split_to_plot]))
             dates = df[context["cfg_data"].time_col].iloc[actual_idx].values
-
+            
             fig, axes = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
 
             # IMF
-            axes[0].plot(dates, recons["LSTM"]["imf"][split_to_plot].ravel(), label="LSTM IMF", color="blue")
-            axes[0].plot(dates, recons["GRU"]["imf"][split_to_plot].ravel(), label="GRU IMF", color="cyan")
+            axes[0].plot(dates, recons["LSTM"]["imf"][split_to_plot][:, -1], label="LSTM IMF", color="blue")
+            axes[0].plot(dates, recons["GRU"]["imf"][split_to_plot][:, -1], label="GRU IMF", color="cyan")
             axes[0].legend()
             axes[0].set_title("IMF Reconstruction (LSTM vs GRU)")
 
             # FCR
-            axes[1].plot(dates, recons["LSTM"]["fcr"][split_to_plot].ravel(), label="LSTM FCR", color="green")
-            axes[1].plot(dates, recons["GRU"]["fcr"][split_to_plot].ravel(), label="GRU FCR", color="lime")
+            axes[1].plot(dates, recons["LSTM"]["fcr"][split_to_plot][:, -1], label="LSTM FCR", color="green")
+            axes[1].plot(dates, recons["GRU"]["fcr"][split_to_plot][:, -1], label="GRU FCR", color="lime")
             axes[1].legend()
             axes[1].set_title("FCR Reconstruction (LSTM vs GRU)")
 
             # Meta
-            axes[2].plot(dates, recons["LSTM"]["meta"][split_to_plot].ravel(), label="LSTM Meta", color="red")
-            axes[2].plot(dates, recons["GRU"]["meta"][split_to_plot].ravel(), label="GRU Meta", color="orange")
+            axes[2].plot(dates, recons["LSTM"]["meta"][split_to_plot][:, -1], label="LSTM Meta", color="red")
+            axes[2].plot(dates, recons["GRU"]["meta"][split_to_plot][:, -1], label="GRU Meta", color="orange")
             axes[2].legend()
             axes[2].set_title("Meta Ensemble (LSTM vs GRU)")
 
