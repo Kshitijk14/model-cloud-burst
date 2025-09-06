@@ -26,36 +26,39 @@ class Stage06_EnsembleReconstruction(Step):
 
         for model_type in ["LSTM", "GRU"]:
             # ---- IMF reconstruction ----
-            imf_forecasts = []
+            imf_forecasts = {"train": [], "val": [], "test": []}
             for name, preds_by_model in preds_imf.items():
                 stats = datasets_imf[name]
                 mean, std = stats["mean"], stats["std"]
-                
-                raw = preds_by_model[model_type]["pred"]["test"]
-                pred = raw * std + mean
-                
-                imf_forecasts.append(pred)
-            recon_imf = np.sum(imf_forecasts, axis=0)
+
+                for split in ["train", "val", "test"]:
+                    raw = preds_by_model[model_type]["pred"][split]
+                    pred = raw * std + mean
+                    imf_forecasts[split].append(pred)
+
+            recon_imf = {split: np.sum(arrs, axis=0) for split, arrs in imf_forecasts.items()}
 
             # ---- FCR reconstruction ----
-            fcr_forecasts = []
+            fcr_forecasts = {"train": [], "val": [], "test": []}
             for name, preds_by_model in preds_fcr.items():
                 stats = datasets_fcr[name]
                 mean, std = stats["mean"], stats["std"]
-                
-                raw = preds_by_model[model_type]["pred"]["test"]
-                pred = raw * std + mean
-                
-                fcr_forecasts.append(pred)
-            recon_fcr = np.sum(fcr_forecasts, axis=0)
+
+                for split in ["train", "val", "test"]:
+                    raw = preds_by_model[model_type]["pred"][split]
+                    pred = raw * std + mean
+                    fcr_forecasts[split].append(pred)
+
+            recon_fcr = {split: np.sum(arrs, axis=0) for split, arrs in fcr_forecasts.items()}
 
             # ---- Meta ensemble (average of IMF + FCR) ----
-            recon_meta = 0.5 * (recon_imf + recon_fcr)
+            recon_meta = {split: 0.5 * (recon_imf[split] + recon_fcr[split]) for split in ["train", "val", "test"]}
 
             # save reconstructions
-            np.save(os.path.join(step_dir, f"recon_{model_type}_imf.npy"), recon_imf)
-            np.save(os.path.join(step_dir, f"recon_{model_type}_fcr.npy"), recon_fcr)
-            np.save(os.path.join(step_dir, f"recon_{model_type}_meta.npy"), recon_meta)
+            for split in ["train", "val", "test"]:
+                np.save(os.path.join(step_dir, f"recon_{model_type}_imf_{split}.npy"), recon_imf[split])
+                np.save(os.path.join(step_dir, f"recon_{model_type}_fcr_{split}.npy"), recon_fcr[split])
+                np.save(os.path.join(step_dir, f"recon_{model_type}_meta_{split}.npy"), recon_meta[split])
 
             recons[model_type] = {
                 "imf": recon_imf,
@@ -63,24 +66,89 @@ class Stage06_EnsembleReconstruction(Step):
                 "meta": recon_meta,
             }
 
+        # ---- Helper for plotting actual vs predicted ----
+        def plot_vs_actual(kind: str, split: str, zoom: bool = False):
+            # actual_idx = splits[split]
+            # idx = np.array(actual_idx)[-len(recons["LSTM"][kind][split]):]
+            
+            # dates = df[time_col].iloc[idx].values
+            # y_true = df[context["cfg_data"].target_col].iloc[idx].values
+            
+            pred_lstm = recons["LSTM"][kind][split][:, -1]
+            pred_gru  = recons["GRU"][kind][split][:, -1]
+            
+            start, end = splits[split]
+            actual_idx = range(end - len(pred_lstm), end)  # last len(pred_lstm) indices
+            dates = df[time_col].iloc[actual_idx].values
+            y_true = df[context["cfg_data"].target_col].iloc[actual_idx].values
+
+            plt.figure(figsize=(12, 4))
+            plt.plot(dates, y_true, label="Actual", color="black")
+            # plt.plot(dates, recons["LSTM"][kind][split].ravel(), label=f"LSTM {kind}", color="blue")
+            # plt.plot(dates, recons["GRU"][kind][split].ravel(), label=f"GRU {kind}", color="orange")
+            plt.plot(dates, pred_lstm, label=f"LSTM {kind}", color="blue")
+            plt.plot(dates, pred_gru, label=f"GRU {kind}", color="orange")
+
+            plt.legend()
+            title = f"{kind.upper()} {split.title()} (Actual vs Predicted)"
+            if zoom:
+                title += " [Zoomed]"
+                if len(dates) > 200:
+                    dates = dates[-200:]
+                    y_true = y_true[-200:]
+                    lstm_pred = recons["LSTM"][kind][split].ravel()[-200:]
+                    gru_pred = recons["GRU"][kind][split].ravel()[-200:]
+
+                    plt.cla()
+                    plt.figure(figsize=(12, 4))
+                    plt.plot(dates, y_true, label="Actual", color="black")
+                    plt.plot(dates, lstm_pred, label=f"LSTM {kind}", color="blue")
+                    plt.plot(dates, gru_pred, label=f"GRU {kind}", color="orange")
+                    plt.legend()
+
+            plt.title(title)
+            plt.tight_layout()
+            fname = f"{kind}_{split}{'_zoom' if zoom else ''}.png"
+            plt.savefig(os.path.join(step_dir, fname))
+            plt.close()
+        
+        # ---- Generate plots for each kind & split ----
+        for kind in ["imf", "fcr", "meta"]:
+            for split in ["val", "test"]:  # focus on val & test
+                plot_vs_actual(kind, split, zoom=False)
+                plot_vs_actual(kind, split, zoom=True)
+        
+        
         # ---- Plots: LSTM vs GRU for IMF, FCR, Meta ----
-        fig, axes = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
+        for split_to_plot in ["val", "test"]:
+            actual_idx = splits[split_to_plot]
+            dates = df[context["cfg_data"].time_col].iloc[actual_idx].values
 
-        axes[0].plot(recons["LSTM"]["imf"].ravel(), label="LSTM IMF", color="blue")
-        axes[0].plot(recons["GRU"]["imf"].ravel(), label="GRU IMF", color="cyan")
-        axes[0].legend(); axes[0].set_title("IMF Reconstruction (LSTM vs GRU)")
+            fig, axes = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
 
-        axes[1].plot(recons["LSTM"]["fcr"].ravel(), label="LSTM FCR", color="green")
-        axes[1].plot(recons["GRU"]["fcr"].ravel(), label="GRU FCR", color="lime")
-        axes[1].legend(); axes[1].set_title("FCR Reconstruction (LSTM vs GRU)")
+            # IMF
+            axes[0].plot(dates, recons["LSTM"]["imf"][split_to_plot].ravel(), label="LSTM IMF", color="blue")
+            axes[0].plot(dates, recons["GRU"]["imf"][split_to_plot].ravel(), label="GRU IMF", color="cyan")
+            axes[0].legend()
+            axes[0].set_title("IMF Reconstruction (LSTM vs GRU)")
 
-        axes[2].plot(recons["LSTM"]["meta"].ravel(), label="LSTM Meta", color="red")
-        axes[2].plot(recons["GRU"]["meta"].ravel(), label="GRU Meta", color="orange")
-        axes[2].legend(); axes[2].set_title("Meta Ensemble (LSTM vs GRU)")
+            # FCR
+            axes[1].plot(dates, recons["LSTM"]["fcr"][split_to_plot].ravel(), label="LSTM FCR", color="green")
+            axes[1].plot(dates, recons["GRU"]["fcr"][split_to_plot].ravel(), label="GRU FCR", color="lime")
+            axes[1].legend()
+            axes[1].set_title("FCR Reconstruction (LSTM vs GRU)")
 
-        plt.tight_layout()
-        plt.savefig(os.path.join(step_dir, "reconstruction_comparison.png"))
-        plt.close()
+            # Meta
+            axes[2].plot(dates, recons["LSTM"]["meta"][split_to_plot].ravel(), label="LSTM Meta", color="red")
+            axes[2].plot(dates, recons["GRU"]["meta"][split_to_plot].ravel(), label="GRU Meta", color="orange")
+            axes[2].legend()
+            axes[2].set_title("Meta Ensemble (LSTM vs GRU)")
+
+            plt.xlabel("Date-Time")
+            plt.tight_layout()
+            fname = os.path.join(step_dir, f"reconstruction_comparison_{split_to_plot}.png")
+            plt.savefig(fname)
+            plt.close()
 
         print(f"[Stage_06] Reconstructions saved under {step_dir}")
 

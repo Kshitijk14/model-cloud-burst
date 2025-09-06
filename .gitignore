@@ -168,3 +168,5 @@ cloud/
 artifacts/models/
 artifacts/results/
 artifacts/scalers/
+
+artifacts/ts_eemd_pipeline/

@@ -22,5 +22,5 @@ class PreprocessConfig:
 class RunConfig:
     lookback: int = 96
     horizon: int = 24
-    artifacts_root: str = "artifacts/mnt/ts_eemd_pipeline"
+    artifacts_root: str = "artifacts/ts_eemd_pipeline"
     run_name: str = "demo_run"

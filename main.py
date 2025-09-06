@@ -38,8 +38,8 @@ EEMD_CFG = {
 RUN_CFG = RunConfig(
     lookback=96,
     horizon=24,
-    artifacts_root="artifacts/mnt/ts_eemd_pipeline",
-    run_name="stage00_01_demo",
+    artifacts_root="artifacts/ts_eemd_pipeline",
+    run_name="demo_run",
 )
 
 TRAIN_CFG = {

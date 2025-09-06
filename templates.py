@@ -28,7 +28,7 @@ list_of_files = [
     "app.py",
     
     "params.yaml",
-    "DVC.yaml",
+    "dvc.yaml",
     ".env.local",
 ]
 
